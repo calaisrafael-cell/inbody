@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evolução InBody - Rafael & Karol</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.8em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .header p {
+            font-size: 1.3em;
+            opacity: 0.95;
+        }
+        
+        .tabs {
+            display: flex;
+            background: #ecf0f1;
+            border-bottom: 3px solid #00b894;
+        }
+        
+        .tab-button {
+            flex: 1;
+            padding: 20px;
+            background: #ecf0f1;
+            border: none;
+            font-size: 1.3em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #555;
+        }
+        
+        .tab-button:hover {
+            background: #d5dbdb;
+        }
+        
+        .tab-button.active {
+            background: white;
+            color: #00b894;
+            border-bottom: 4px solid #00b894;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .info-banner {
+            background: linear-gradient(135deg, #00d084 0%, #00b975 100%);
+            color: white;
+            padding: 25px 40px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .info-banner-item {
+            text-align: center;
+            padding: 15px;
+        }
+        
+        .info-banner-item .label {
+            font-size: 0.9em;
+            opacity: 0.95;
+            margin-bottom: 5px;
+        }
+        
+        .info-banner-item .value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #000000;
+            text-shadow: 1px 1px 2px rgba(255,255,255,0.3);
+        }
+        
+        .info-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            padding: 30px;
+            background: #f8f9fa;
+        }
+        
+        .info-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .info-card h3 {
+            color: #00b894;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+            border-bottom: 3px solid #00b894;
+            padding-bottom: 10px;
+        }
+        
+        .info-card p {
+            margin: 10px 0;
+            font-size: 1.05em;
+            color: #555;
+        }
+        
+        .info-card strong {
+            color: #333;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .section-title {
+            font-size: 2em;
+            color: #2c3e50;
+            margin: 30px 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 4px solid #00b894;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title .icon {
+            margin-right: 15px;
+            font-size: 1.2em;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .comparison-table thead {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+        }
+        
+        .comparison-table th {
+            padding: 18px;
+            text-align: left;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+        
+        .comparison-table td {
+            padding: 15px 18px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        .comparison-table tbody tr:hover {
+            background-color: #f8f9fa;
+            transition: background-color 0.3s;
+        }
+        
+        .comparison-table tbody tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+        
+        .metric-name {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 1.05em;
+        }
+        
+        .positive {
+            color: #00b894;
+            font-weight: bold;
+        }
+        
+        .negative {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        .neutral {
+            color: #f39c12;
+            font-weight: bold;
+        }
+        
+        .evolution {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.95em;
+            font-weight: bold;
+        }
+        
+        .evolution.good {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .evolution.bad {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .evolution.stable {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        
+        .highlight-box h3 {
+            font-size: 1.7em;
+            margin-bottom: 20px;
+        }
+        
+        .highlight-box ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .highlight-box li {
+            padding: 12px 0;
+            padding-left: 35px;
+            position: relative;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+        
+        .highlight-box li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+            font-size: 1.4em;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        
+        .status-normal {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .status-acima {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-abaixo {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .progress-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+        
+        .progress-section h3 {
+            color: #00b894;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .stat-card .stat-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #00b894;
+            margin: 10px 0;
+        }
+        
+        .stat-card .stat-label {
+            font-size: 1em;
+            color: #7f8c8d;
+        }
+        
+        .alert-box {
+            background: #fff3cd;
+            border-left: 5px solid #f39c12;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .alert-box h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        
+        .success-box {
+            background: #d4edda;
+            border-left: 5px solid #00b894;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .success-box h4 {
+            color: #155724;
+            margin-bottom: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .info-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .comparison-table {
+                font-size: 0.85em;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tab-button {
+                font-size: 1.1em;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏆 Análise de Evolução InBody</h1>
+            <p>Acompanhamento de Composição Corporal</p>
+        </div>
+        
+        <div class="tabs">
+            <button class="tab-button active" onclick="openTab(event, 'rafael')">👨 Rafael</button>
+            <button class="tab-button" onclick="openTab(event, 'karol')">👩 Karol</button>
+        </div>
+        
+        <!-- TAB RAFAEL -->
+        <div id="rafael" class="tab-content active">
+            <div class="info-banner">
+                <div class="info-banner-item">
+                    <div class="label">Perda de Peso</div>
+                    <div class="value positive">-5,2 kg</div>
+                </div>
+                <div class="info-banner-item">
+                    <div class="label">Redução de Gordura</div>
+                    <div class="value positive">-4,1 kg</div>
+                </div>
+                <div class="info-banner-item">
+                    <div class="label">Redução PGC</div>
+                    <div class="value positive">-2,6%</div>
+                </div>
+                <div class="info-banner-item">
+                    <div class="label">Melhoria IMC</div>
+                    <div class="value positive">-1,8 pontos</div>
+                </div>
+            </div>
+            
+            <div class="info-cards">
+                <div class="info-card">
+                    <h3>📅 Primeiro Exame (Agosto)</h3>
+                    <p><strong>Paciente:</strong> Rafael</p>
+                    <p><strong>Data:</strong> 23/08/2025 - 08:09</p>
+                    <p><strong>Idade:</strong> 29 anos</p>
+                    <p><strong>Altura:</strong> 169 cm</p>
+                    <p><strong>Peso:</strong> 91,5 kg</p>
+                    <p><strong>IMC:</strong> 32,0 kg/m² <span class="status-badge status-acima">Elevado</span></p>
+                    <p><strong>PGC:</strong> 36,4%</p>
+                </div>
+                
+                <div class="info-card">
+                    <h3>📅 Segundo Exame (Novembro)</h3>
+                    <p><strong>Paciente:</strong> Rafael</p>
+                    <p><strong>Data:</strong> 08/11/2025 - 08:21</p>
+                    <p><strong>Idade:</strong> 30 anos</p>
+                    <p><strong>Altura:</strong> 169 cm</p>
+                    <p><strong>Peso:</strong> 86,3 kg</p>
+                    <p><strong>IMC:</strong> 30,2 kg/m² <span class="status-badge status-acima">Elevado</span></p>
+                    <p><strong>PGC:</strong> 33,8%</p>
+                </div>
+            </div>
+            
+            <div class="content">
+                <div class="success-box">
+                    <h4>🎉 Parabéns, Rafael! Resultados Positivos Alcançados!</h4>
+                    <p>Em 2,5 meses você conseguiu resultados significativos na sua composição corporal, com redução de peso e gordura mantendo a massa muscular. Continue assim!</p>
+                </div>
+                
+                <h2 class="section-title"><span class="icon">📊</span> Comparação de Métricas Principais</h2>
+                
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Métrica</th>
+                            <th>Agosto 2025</th>
+                            <th>Novembro 2025</th>
+                            <th>Variação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="metric-name">Peso Total</td>
+                            <td>91,5 kg</td>
+                            <td>86,3 kg</td>
+                            <td><span class="evolution good">-5,2 kg (-5,7%) ↓</span></td>
+                        </tr>
+                        <tr>
+                            <td class="metric-name">Massa Muscular Esquelética</td>
+                            <td>33,1 kg</td>
+                            <td>32,4 kg</td>
+                            <td><span class="evolution stable">-0,7 kg (-2,1%) ↓</span></td>
+                        </tr>
+                        <tr>
+                            <td class="metric-name">Massa de Gordura</td>
+                            <td>33,3 kg</td>
+                            <td>29,2 kg</td>
+                            <td><span class="evolution good">-4,1 kg (-12,3%) ↓</span></td>
+                        </tr>
+                        <tr>
+                            <td class="metric-name">Percentual de Gordura (PGC)</td>
+                            <td>36,4%</td>
+                            <td>33,8%</td>
+                            <td><span class="evolution good">-2,6 pontos percentuais ↓</span></td>
+                        </tr>
+                        <tr>
+                            <td class="metric-name">IMC</td>
+                            <td>32,0 kg/m²</td>
+                            <td>30,2 kg/m²</td>
+                            <td><span class="evolution good">-1,8 kg/m² (-5,6%) ↓</span></td>
+                        </tr>
+                        <tr>
+                            <td class="metric-name">Água Corporal Total</td>
+                            <td>42,7 L</td>
+                            <td>41,9 L</td>
+                            <td><span class="evolution stable">-0,8 L (-1,9%) ↓</span></td>
+                        </tr>
+                        <tr>
+                            <td class="metric-name">Proteína</td>
+                            <td>11,7 kg</td>
+                            <td>11,4 kg</td>
+                            <td><span class="evolution stable">-0,3 kg (-2,6%) ↓</span></td>
+                        </tr>
+                        <tr>
+                            <td class="metric-name">Minerais</td>
+                            <td>3,84 kg</td>
+                            <td>3,79 kg</td>
+                            <td><span class="evolution stable">-0,05 kg (-1,3%) ↓</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="progress-section">
+                    <h3>📈 Destaques da Evolução</h3>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-label">Perda de Peso Semanal</div>
+                            <div class="stat-value">~0,5 kg</div>
+                            <div class="stat-label">Ritmo saudável!</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Gordura Perdida</div>
+                            <div class="stat-value">79%</div>
+                            <div class="stat-label">da perda total</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Preservação Muscular</div>
+                            <div class="stat-value">97,9%</div>
+                            <div class="stat-label">mantida</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Déficit Calórico</div>
+                            <div class="stat-value">~500</div>
+                            <div class="stat-label">kcal/dia</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="highlight-box">
+                    <h3>🎯 Principais Conquistas - Rafael</h3>
+                    <ul>
+                        <li><strong>Perda de Peso Saudável:</strong> Você perdeu 5,2 kg em 2,5 meses, equivalente a cerca de 0,5 kg por semana - um ritmo ideal e sustentável!</li>
+                        <li><strong>Redução Efetiva de Gordura:</strong> 79% da sua perda de peso foi de gordura (4,1 kg), enquanto preservou 97,9% da massa muscular</li>
+                        <li><strong>Melhoria do IMC:</strong> Seu IMC reduziu de 32,0 para 30,2, aproximando-se da faixa de sobrepeso</li>
+                        <li><strong>Percentual de Gordura:</strong> Redução significativa de 36,4% para 33,8% (-2,6 pontos percentuais)</li>
+                        <li><strong>Redução Uniforme:</strong> A gordura foi reduzida em todos os segmentos corporais</li>
+                        <li><strong>Preservação Muscular:</strong> Perda mínima de massa muscular (-0,7 kg), indicando que o déficit calórico está adequado</li>
+                    </ul>
+                </div>
+                
+                <h2 class="section-title"><span class="icon">💪</span> Análise Segmentar - Massa Magra</h2>
+                
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Segmento</th>
+                            <th>Agosto 2025</th>
+                            <th>Novembro 2025</th>
+                            <th>Variação</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="metric-name">Braço Direito</td>
+                            <td>3,88 kg (115,8%)</td>
+                            <td>3,73 kg (113,5%)</td>
+                            <td><span class="evolution stable">-0,15 kg</span></td>
+                            <td><span class="status-badge status-normal">Normal</span></td>
+                        </tr>
+                        <tr>
+                            <td class="metric-name">Braço Esquerdo</td>
+                            <td>3,81 kg (113,8%)</td>
+                            <td>3,68 kg (111,9%)</td>
+                            <td><span class="evolution stable">-0,13 kg</span></td>
+                            <td><span class="status-badge status-normal">Normal</span></td>
+                        </tr>
+                        <tr>
+                            <td class="metric-name">Tronco</td>
+                            <td>29,5 kg (110,6%)</td>
+                            <td>28,6 kg (109,3%)</td>
+                            <td><span class="evolution stable">-0,9 kg</span></td>
+                            <td><span class="status-badge status-normal">Normal</span></td>
+                        </tr>
+                        <tr>
+                            <td class="metric-name">Perna Direita</td>
+                            <td>8,37 kg (89,8%)</td>
+                            <td>8,16 kg (89,3%)</td>
+                            <td><span class="evolution stable">-0,21 kg</span></td>
+                            <td><span class="status-badge status-abaixo">Abaixo</span></td>
+                        </tr>
+                        <tr>
+                            <td class="metric-name">Perna Esquerda</td>
+                            <td>8,44 kg (90,6%)</td>
+                            <td>8,23 kg (90,0%)</td>
+                            <td><span class="evolution stable">-0,21 kg</span></td>
+                            <td><span class="status-badge status-normal">Normal</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="alert-box">
+                    <h4>⚠️ Atenção: Perna Direita</h4>
+                    <p>A perna direita continua com massa muscular abaixo do ideal (89,3%). Recomenda-se exercícios específicos para fortalecimento do membro inferior direito, como agachamento búlgaro, leg press unilateral e afundos.</p>
+                </div>
+                
+                <h2 class="section-title"><span class="icon">🔥</span> Análise Segmentar - Gordura Corporal</h2>
+                
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Segmento</th>
+                            <th>Agosto 2025</th>
+                            <th>Novembro 2025</th>
+                            <th>Variação</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="metric-name">Braço Direito</td>
+                            <td>2,6 kg (38,4%)</td>
+                            <td>2,1 kg (34,3%)</td>
+                            <td><span class="evolution good">-0,5 kg (-4,1 pp) ↓</span></td>
+                            <td><span class="status-badge status-acima">Acima</span></td>
+                        </tr>
+                        <tr>
+                            <td class="metric-name">Braço Esquerdo</td>
+                            <td>2,6 kg (38,8%)</td>
+                            <td>2,1 kg (34,7%)</td>
+                            <td><span class="evolution good">-0,5 kg (-4,1 pp) ↓</span></td>
+                            <td><span class="status-badge status-acima">Acima</span></td>
+                        </tr>
+                        <tr>
+                            <td class="metric-name">Tronco</td>
+                            <td>19,2 kg (38,1%)</td>
+                            <td>16,9 kg (35,8%)</td>
+                            <td><span class="evolution good">-2,3 kg (-2,3 pp) ↓</span></td>
+                            <td><span class="status-badge status-acima">Acima</span></td>
+                        </tr>
+                        <tr>
+                            <td class="metric-name">Perna Direita</td>
+                            <td>3,8 kg (29,8%)</td>
+                            <td>3,4 kg (28,0%)</td>
+                            <td><span class="evolution good">-0,4 kg (-1,8 pp) ↓</span></td>
+                            <td><span class="status-badge status-acima">Acima</span></td>
+                        </tr>
+                        <tr>
+                            <td class="metric-name">Perna Esquerda</td>
+                            <td>3,8 kg (29,7%)</td>
+                            <td>3,4 kg (27,9%)</td>
+                            <td><span class="evolution good">-0,4 kg (-1,8 pp) ↓</span></td>
+                            <td><span class="status-badge status-acima">Acima</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h2 class="section-title"><span class="icon">🎯</span> Recomendações para Continuar Progredindo</h2>
+                
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Área</th>
+                            <th>Status Atual</th>
+                            <th>Recomendação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="metric-name">Meta de Peso</td>
+                            <td>Progresso excelente (-5,2 kg)</td>
+                            <td>Continue com déficit calórico moderado (300-500 kcal/dia). Meta sugerida: 75-80 kg para IMC normal</td>
+                        </tr>
+                        <tr>
+                            <td class="metric-name">Percentual de Gordura</td>
+                            <td>33,8% (ainda elevado)</td>
+                            <td>Objetivo: reduzir para 20-25%. Continue com treino de força e cardio moderado (150min/semana)</td>
+                        </tr>
+                        <tr>
+                            <td class="metric-name">Massa Muscular</td>
+                            <td>Bem preservada (-2,1%)</td>
+                            <td>Manter ingestão proteica alta (1,6-2g/kg/dia) e treino de hipertrofia 3-4x/semana</td>
+                        </tr>
+                        <tr>
+                            <td class="metric-name">Perna Direita</td>
+                            <td>Abaixo do ideal (89,3%)</td>
+                            <td>Treino unilateral específico: agachamento búlgaro, leg press unilateral, step-ups com peso</td>
+                        </tr>
+                        <tr>
+                            <td class="metric-name">Nutrição</td>
+                            <td>Estratégia efetiva</td>
+                            <td>Continue monitorando calorias, priorize proteínas magras, vegetais e carboidratos complexos</td>
+                        </tr>
+                        <tr>
+                            <td class="metric-name">Cardio</td>
+                            <td>Resultados positivos</td>
+                            <td>Manter 150-200 min/semana de atividade aeróbica moderada (caminhada, natação, ciclismo)</td>
+                        </tr>
+                        <tr>
+                            <td class="metric-name">Hidratação</td>
+                            <td>Adequada</td>
+                            <td>Manter ingestão de 2,5-3L de água/dia para otimizar metabolismo e recuperação</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="success-box">
+                    <h4>🏆 Próximos Marcos</h4>
+                    <p><strong>Meta Curto Prazo (3 meses):</strong> Atingir 82-84 kg com PGC em ~31-32%</p>
+                    <p><strong>Meta Médio Prazo (6 meses):</strong> Atingir 78-80 kg com PGC em ~27-29%</p>
+                    <p><strong>Meta Longo Prazo (12 meses):</strong> Atingir 75-77 kg com PGC em ~22-25% e IMC normal</p>
+                </div>
+                
+                <div style="background: #ecf0f1; padding: 30px; border-radius: 15px; margin-top: 40px;">
+                    <h3 style="color: #2c3e50; margin-bottom: 15px;">📊 Análise Técnica</h3>
+                    <p style="margin: 10px 0;"><strong>Taxa de Perda Semanal:</strong> 0,52 kg/semana (dentro do ideal de 0,5-1 kg/semana)</p>
+                    <p style="margin: 10px 0;"><strong>Razão Gordura/Músculo Perdida:</strong> 5,9:1 (excelente - ideal é >3:1)</p>
+                    <p style="margin: 10px 0;"><strong>Déficit Calórico Estimado:</strong> ~500 kcal/dia</p>
+                    <p style="margin: 10px 0;"><strong>Calorias Queimadas:</strong> Aproximadamente 40.000 kcal no período</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- TAB KAROL -->
+        <div id="karol" class="tab-content">
+            <div class="info-banner">
+                <div class="info-banner-item">
+                    <div class="label">Perda de Peso</div>
+                    <div class="value positive">-1,6 kg</div>
+                </div>
+                <div class="info-banner-item">
+                    <div class="label">Redução de Gordura</div>
+                    <div class="value positive">-2,8 kg</div>
+                </div>
+                <div class="info-banner-item">
+                    <div class="label">Redução PGC</div>
+                    <div class="value positive">-4,3%</div>
+                </div>
+                <div class="info-banner-item">
+                    <div class="label">Ganho Muscular</div>
+                    <div class="value positive">+0,8 kg</div>
+                </div>
+            </div>
+            
+            <div class="info-cards">
+                <div class="info-card">
+                    <h3>📅 Primeiro Exame (Agosto)</h3>
+                    <p><strong>Paciente:</strong> Karol</p>
+                    <p><strong>Data:</strong> 23/08/2025 - 08:12</p>
+                    <p><strong>Idade:</strong> 27 anos</p>
+                    <p><strong>Altura:</strong> 165 cm</p>
+                    <p><strong>Peso:</strong> 56,4 kg</p>
+                    <p><strong>IMC:</strong> 20,7 kg/m² <span class="status-badge status-normal">Normal</span></p>
+                    <p><strong>PGC:</strong> 26,2%</p>
+                </div>
+                
+                <div class="info-card">
+                    <h3>📅 Segundo Exame (Novembro)</h3>
+                    <p><strong>Paciente:</strong> Karol</p>
+                    <p><strong>Data:</strong> 08/11/2025 - 08:25</p>
+                    <p><strong>Idade:</strong> 28 anos</p>
+                    <p><strong>Altura:</strong> 165 cm</p>
+                    <p><strong>Peso:</strong> 54,8 kg</p>
+                    <p><strong>IMC:</strong> 20,1 kg/m² <span class="status-badge status-normal">Normal</span></p>
+                    <p><strong>PGC:</strong> 21,9%</p>
+                </div>
+            </div>
+            
+            <div class="content">
+                <div class="success-box">
+                    <h4>🎉 Parabéns, Karol! Resultados Excepcionais!</h4>
+                    <p>Em 2,5 meses você conquistou uma recomposição corporal perfeita: perdeu gordura, ganhou massa muscular e manteve o peso saudável. Excelente trabalho!</p>
+                </div>
+                
+                <h2 class="section-title"><span class="icon">📊</span> Comparação de Métricas Principais</h2>
+                
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Métrica</th>
+                            <th>Agosto 2025</th>
+                            <th>Novembro 2025</th>
+                            <th>Variação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="metric-name">Peso Total</td>
+                            <td>56,4 kg</td>
+                            <td>54,8 kg</td>
+                            <td><span class="evolution good">-1,6 kg (-2,8%) ↓</span></td>
+                        </tr>
+                        <tr>
+                            <td class="metric-name">Massa Muscular Esquelética</td>
+                            <td>22,8 kg</td>
+                            <td>23,6 kg</td>
+                            <td><span class="evolution good">+0,8 kg (+3,5%) ↑</span></td>
+                        </tr>
+                        <tr>
+                            <td class="metric-name">Massa de Gordura</td>
+                            <td>14,8 kg</td>
+                            <td>12,0 kg</td>
+                            <td><span class="evolution good">-2,8 kg (-18,9%) ↓</span></td>
+                        </tr>
+                        <tr>
+                            <td class="metric-name">Percentual de Gordura (PGC)</td>
+                            <td>26,2%</td>
+                            <td>21,9%</td>
+                            <td><span class="evolution good">-4,3 pontos percentuais ↓</span></td>
+                        </tr>
+                        <tr>
+                            <td class="metric-name">IMC</td>
+                            <td>20,7 kg/m²</td>
+                            <td>20,1 kg/m²</td>
+                            <td><span class="evolution good">-0,6 kg/m² (-2,9%) ↓</span></td>
+                        </tr>
+                        <tr>
+                            <td class="metric-name">Água Corporal Total</td>
+                            <td>30,6 L</td>
+                            <td>31,3 L</td>
+                            <td><span class="evolution good">+0,7 L (+2,3%) ↑</span></td>
+                        </tr>
+                        <tr>
+                            <td class="metric-name">Proteína</td>
+                            <td>8,1 kg</td>
+                            <td>8,6 kg</td>
+                            <td><span class="evolution good">+0,5 kg (+6,2%) ↑</span></td>
+                        </tr>
+                        <tr>
+                            <td class="metric-name">Minerais</td>
+                            <td>2,88 kg</td>
+                            <td>2,94 kg</td>
+                            <td><span class="evolution good">+0,06 kg (+2,1%) ↑</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="progress-section">
+                    <h3>📈 Destaques da Evolução</h3>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-label">Recomposição Corporal</div>
+                            <div class="stat-value">Perfeita!</div>
+                            <div class="stat-label">-Gordura +Músculo</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Gordura Perdida</div>
+                            <div class="stat-value">175%</div>
+                            <div class="stat-label">da perda de peso</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Ganho Muscular</div>
+                            <div class="stat-value">+0,8 kg</div>
+                            <div class="stat-label">músculo novo</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Redução PGC</div>
+                            <div class="stat-value">-4,3%</div>
+                            <div class="stat-label">pontos percentuais</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h2 class="section-title"><span class="icon">💪</span> Análise Segmentar - Massa Magra</h2>
+                
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Segmento</th>
+                            <th>Agosto 2025</th>
+                            <th>Novembro 2025</th>
+                            <th>Variação</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="metric-name">Braço Direito</td>
+                            <td>2,17 kg (105,3%)</td>
+                            <td>2,23 kg (111,3%)</td>
+                            <td><span class="evolution good">+0,06 kg ↑</span></td>
+                            <td><span class="status-badge status-normal">Normal</span></td>
+                        </tr>
+                        <tr>
+                            <td class="metric-name">Braço Esquerdo</td>
+                            <td>2,18 kg (106,1%)</td>
+                            <td>2,26 kg (113,1%)</td>
+                            <td><span class="evolution good">+0,08 kg ↑</span></td>
+                            <td><span class="status-badge status-normal">Normal</span></td>
+                        </tr>
+                        <tr>
+                            <td class="metric-name">Tronco</td>
+                            <td>19,6 kg (104,5%)</td>
+                            <td>20,0 kg (109,9%)</td>
+                            <td><span class="evolution good">+0,4 kg ↑</span></td>
+                            <td><span class="status-badge status-normal">Normal</span></td>
+                        </tr>
+                        <tr>
+                            <td class="metric-name">Perna Direita</td>
+                            <td>6,40 kg (98,1%)</td>
+                            <td>6,45 kg (101,9%)</td>
+                            <td><span class="evolution good">+0,05 kg ↑</span></td>
+                            <td><span class="status-badge status-normal">Normal</span></td>
+                        </tr>
+                        <tr>
+                            <td class="metric-name">Perna Esquerda</td>
+                            <td>6,33 kg (97,2%)</td>
+                            <td>6,46 kg (101,9%)</td>
+                            <td><span class="evolution good">+0,13 kg ↑</span></td>
+                            <td><span class="status-badge status-normal">Normal</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="success-box">
+                    <h4>💪 Excelente! Desenvolvimento Muscular Uniforme</h4>
+                    <p>Todos os segmentos corporais apresentaram ganho de massa magra, com destaque para o tronco (+0,4 kg) e braço esquerdo (+0,08 kg). Parabéns pelo treino consistente!</p>
+                </div>
+                
+                <h2 class="section-title"><span class="icon">🔥</span> Análise Segmentar - Gordura Corporal</h2>
+                
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Segmento</th>
+                            <th>Agosto 2025</th>
+                            <th>Novembro 2025</th>
+                            <th>Variação</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="metric-name">Braço Direito</td>
+                            <td>0,9 kg (28,6%)</td>
+                            <td>0,7 kg (23,0%)</td>
+                            <td><span class="evolution good">-0,2 kg (-5,6 pp) ↓</span></td>
+                            <td><span class="status-badge status-abaixo">Abaixo</span></td>
+                        </tr>
+                        <tr>
+                            <td class="metric-name">Braço Esquerdo</td>
+                            <td>0,9 kg (28,0%)</td>
+                            <td>0,7 kg (22,3%)</td>
+                            <td><span class="evolution good">-0,2 kg (-5,7 pp) ↓</span></td>
+                            <td><span class="status-badge status-abaixo">Abaixo</span></td>
+                        </tr>
+                        <tr>
+                            <td class="metric-name">Tronco</td>
+                            <td>7,6 kg (26,7%)</td>
+                            <td>6,0 kg (22,0%)</td>
+                            <td><span class="evolution good">-1,6 kg (-4,7 pp) ↓</span></td>
+                            <td><span class="status-badge status-normal">Normal</span></td>
+                        </tr>
+                        <tr>
+                            <td class="metric-name">Perna Direita</td>
+                            <td>2,2 kg (24,1%)</td>
+                            <td>1,8 kg (20,9%)</td>
+                            <td><span class="evolution good">-0,4 kg (-3,2 pp) ↓</span></td>
+                            <td><span class="status-badge status-abaixo">Abaixo</span></td>
+                        </tr>
+                        <tr>
+                            <td class="metric-name">Perna Esquerda</td>
+                            <td>2,2 kg (24,4%)</td>
+                            <td>1,8 kg (21,0%)</td>
+                            <td><span class="evolution good">-0,4 kg (-3,4 pp) ↓</span></td>
+                            <td><span class="status-badge status-abaixo">Abaixo</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="highlight-box">
+                    <h3>🎯 Principais Conquistas - Karol</h3>
+                    <ul>
+                        <li><strong>Recomposição Corporal Perfeita:</strong> Você conseguiu o resultado ideal - perdeu 2,8 kg de gordura e GANHOU 0,8 kg de músculo ao mesmo tempo!</li>
+                        <li><strong>Redução Excepcional de Gordura:</strong> Seu percentual de gordura caiu de 26,2% para 21,9% (-4,3 pontos), atingindo um nível atlético</li>
+                        <li><strong>Ganho de Massa Muscular:</strong> Aumento de 3,5% na massa muscular esquelética, um resultado excelente em apenas 2,5 meses</li>
+                        <li><strong>IMC Ideal:</strong> Manteve o IMC na faixa saudável (20,1), demonstrando equilíbrio perfeito</li>
+                        <li><strong>Desenvolvimento Uniforme:</strong> Todos os segmentos apresentaram ganho muscular e redução de gordura</li>
+                        <li><strong>Hidratação Ótima:</strong> Aumento da água corporal (+0,7L) indica boa hidratação e ganho de massa magra</li>
+                    </ul>
+                </div>
+                
+                <h2 class="section-title"><span class="icon">🎯</span> Recomendações para Continuar Evoluindo</h2>
+                
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Área</th>
+                            <th>Status Atual</th>
+                            <th>Recomendação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="metric-name">Composição Corporal</td>
+                            <td>Excelente (PGC 21,9%)</td>
+                            <td>Manter o trabalho atual! Foco em hipertrofia para continuar ganhando massa magra</td>
+                        </tr>
+                        <tr>
+                            <td class="metric-name">Massa Muscular</td>
+                            <td>Crescimento ótimo (+0,8 kg)</td>
+                            <td>Aumentar ingestão proteica para 1,8-2g/kg/dia e manter treino de força 4-5x/semana</td>
+                        </tr>
+                        <tr>
+                            <td class="metric-name">Percentual de Gordura</td>
+                            <td>Nível atlético (21,9%)</td>
+                            <td>Objetivo alcançado! Pode manter ou buscar 18-20% se desejar definição extra</td>
+                        </tr>
+                        <tr>
+                            <td class="metric-name">Nutrição</td>
+                            <td>Estratégia perfeita</td>
+                            <td>Continue com superávit calórico leve (+200-300 kcal/dia) para ganho muscular limpo</td>
+                        </tr>
+                        <tr>
+                            <td class="metric-name">Treino</td>
+                            <td>Resultados excepcionais</td>
+                            <td>Manter treino de hipertrofia, variar estímulos e progressão de carga</td>
+                        </tr>
+                        <tr>
+                            <td class="metric-name">Cardio</td>
+                            <td>Equilibrado</td>
+                            <td>Manter 2-3x/semana de HIIT ou cardio leve para saúde cardiovascular</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div style="background: #ecf0f1; padding: 30px; border-radius: 15px; margin-top: 40px;">
+                    <h3 style="color: #2c3e50; margin-bottom: 15px;">📊 Análise Técnica</h3>
+                    <p style="margin: 10px 0;"><strong>Razão Gordura/Músculo:</strong> Perdeu 2,8 kg de gordura e ganhou 0,8 kg de músculo = recomposição perfeita!</p>
+                    <p style="margin: 10px 0;"><strong>Taxa de Ganho Muscular:</strong> 0,08 kg/semana (excelente para mulheres)</p>
+                    <p style="margin: 10px 0;"><strong>Redução de Gordura:</strong> 18,9% em 2,5 meses (ritmo ideal)</p>
+                    <p style="margin: 10px 0;"><strong>Estratégia Nutricional:</strong> Superávit calórico leve com alta proteína</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tabbuttons;
+            
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            
+            tabbuttons = document.getElementsByClassName("tab-button");
+            for (i = 0; i < tabbuttons.length; i++) {
+                tabbuttons[i].classList.remove("active");
+            }
+            
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+    </script>
+</body>
+</html>
